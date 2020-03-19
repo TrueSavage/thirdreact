@@ -1,53 +1,46 @@
 import React, { Component } from 'react'
+import axios from 'axios'
 
 class App extends Component {
 
   state = {
-    numbers: [1, 2, 3, 4, 5],
-    number: ''
+    pokemon: []
   }
 
-  handleInputChange = event => {
-    this.setState({ [event.target.name]: event.target.value })
+
+  componentDidMount () {
+    axios.get('https://pokeapi.co/api/v2/pokemon')
+      .then(({ data: { results } }) => {
+        console.log(results)
+        this.setState({ pokemon: results })
+      })
+      .catch(e => console.error(e))
   }
 
-  handleAddNumber = event => {
-    event.preventDefault()
-    let numbers = JSON.parse(JSON.stringify(this.state.numbers))
-    numbers.push(parseInt(this.state.number))
-    this.setState({ numbers, number: '' })
-  }
-  handleRemoveNumber = i => {
-    let numbers = JSON.parse(JSON.stringify(this.state.numbers))
-    numbers.splice(i, 1)
-    this.setState({ numbers })
+  handleGetPokemon = url => {
+    axios.get(url)
+      .then(({ data }) => {
+        console.log(data)
+      })
   }
 
-  render() {
+  render () {
     return (
       <>
-        <form>
-          <p>
-            <label htmlFor="number">number</label>
-            <input
-              type="number"
-              name="number"
-              value={this.state.number}
-              onChange={this.handleInputChange}
-            />
-          </p>
-          <button onClick={this.handleAddNumber}>Add Number</button>
-        </form>
-        <ul>
-          {
-          this.state.numbers.map((x, i) => (
-          <li key={i}>
-              {x}
-              <button onClick={() => this.handleRemoveNumber(i)}>x</button>
-              </li>
-          ))
-          }
-        </ul>
+      <h1>Hello World!</h1>
+      {
+        this.state.pokemon.map(pokemon => (
+          <div>
+            <p>{pokemon.name}</p>
+            <button onClick={() => this.handleGetPokemon(pokemon.url)}>More Info</button>
+          </div>
+        ))
+      }
+      {/* <div>
+        <p>{this.state.character.name}</p>
+        <p>{this.state.character.height}</p>
+        <p>{this.state.character.hair_color}</p>
+      </div> */}
       </>
     )
   }
