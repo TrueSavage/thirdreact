@@ -17,6 +17,11 @@ class App extends Component {
     numbers.push(parseInt(this.state.number))
     this.setState({ numbers, number: '' })
   }
+  handleRemoveNumber = i => {
+    let numbers = JSON.parse(JSON.stringify(this.state.numbers))
+    numbers.splice(i, 1)
+    this.setState({ numbers })
+  }
 
   render() {
     return (
@@ -35,7 +40,12 @@ class App extends Component {
         </form>
         <ul>
           {
-          this.state.numbers.map(x => <li>{x}</li>)
+          this.state.numbers.map((x, i) => (
+          <li key={i}>
+              {x}
+              <button onClick={() => this.handleRemoveNumber(i)}>x</button>
+              </li>
+          ))
           }
         </ul>
       </>
